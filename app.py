@@ -6,9 +6,9 @@ import uuid
 template_lookup=["assets"]
 
 @get('/')
+@jinja2_view("main.tpl", template_lookup=template_lookup)
 def index():
-    # TODO: render landing page template
-    return "NOP"
+    return {}
 
 @post('/create_session')
 def create_session():
@@ -20,9 +20,16 @@ def create_session():
     redirect('/sessions/{}'.format(session_uuid))
 
 @get('/sessions/<uuid>')
+@jinja2_view("session.tpl", template_lookup=template_lookup)
 def show_session(uuid):
     # TODO: render planning poker template
-    return uuid
+    data = {
+        'name' : '', #TODO: fill me
+        'session' : uuid,
+        'user_story' : '',
+        'users' : ['foo', 'bar'],
+    }
+    return data
 
 @route("/test")
 @jinja2_view("test.tpl", template_lookup=template_lookup)
