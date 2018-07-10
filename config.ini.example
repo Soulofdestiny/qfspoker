@@ -1,0 +1,6 @@
+[DEFAULT]
+bind_address =  
+port = 
+
+[redmine]
+api_key =  
