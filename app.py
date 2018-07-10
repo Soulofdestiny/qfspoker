@@ -2,8 +2,11 @@
 from bottle import route, run, template, jinja2_view, get, post, request, redirect
 import bottle_session
 import uuid
+import configparser
 
 template_lookup=["assets"]
+config = configparser.ConfigParser()
+config.read('config.ini')
 
 @get('/')
 @jinja2_view("main.tpl", template_lookup=template_lookup)
@@ -36,5 +39,5 @@ def show_session(uuid):
 def foobar():
     return { "text" : "test-template" }
 
-run(host='0.0.0.0', port=8080, debug=True)
+run(host=config['DEFAULT']['bind_address'], port=config['DEFAULT']['port'], debug=True)
 
