@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 from sqlalchemy import create_engine, Column, Integer, Sequence, String
 from sqlalchemy.ext.declarative import declarative_base
-from bottle import route, run, template, jinja2_view, get, post, request, redirect, install, response
+from bottle import route, run, template, jinja2_view, get, post, request, redirect, install, response, static_file
 from bottle.ext import sqlalchemy
 import bottle_session
 import uuid
+from redminelib import Redmine
+from os.path import join
 import configparser
 
 template_lookup=["assets"]
@@ -71,6 +73,18 @@ def show_session(session_id, db):
         'users' : ['foo', 'bar'],
     }
     return data
+
+@post('/get_redmine_issue')
+def import_story():
+    redmine = Redmine('https://progress.opensuse.org', key=config['redmine']['api_key'])
+    story_id = request.forms.get('import_story')
+    print(story_id)
+    return (redmine.issue.get(story_id).description)
+    #import pdb; pdb.set_trace()
+
+@route("/assets/<filetype>/<filename>")
+def get_static_files(filetype, filename):
+    return static_file(filename, root=join('assets/', filetype))
 
 @route("/test")
 @jinja2_view("test.tpl", template_lookup=template_lookup)

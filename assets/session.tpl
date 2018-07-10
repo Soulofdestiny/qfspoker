@@ -1,7 +1,10 @@
 <html>
+  <head>
+    <script type="text/javascript" src="/assets/js/redmine.js" ></script>
+  </head>
   <body>
     <h2> Hello {{name}}, Session {{session}} </h2>
-    <textarea rows="4" cols="50" form="user_story" name="user_story" readonly="1">
+    <textarea id="user_story" rows="20" cols="80" form="user_story" name="user_story" readonly="1">
     {{user_story}} 
     </textarea>
     <br>
@@ -16,9 +19,10 @@
     <input type="button" value="next story >" class="switch_story" data="next_story">
     <br>
     <br>
-    <form action="import_story" method="post" id="import_story">
-      <input type="submit" name="action" value="import_story"/>
-      <input type"text" name="import_story"/>
+    <form action="/get_redmine_issue" method="post" id="import_story">
+      <!--<input type="submit" name="action" value="import_story"/>-->
+      <input value="import story" type="button" onclick="get_redmine_issue()"/>
+      <input id=import_story type="text" name="import_story"/>
     </form>
 
     <br>
@@ -28,5 +32,7 @@
       <li> {{ user }} </li>
     {% endfor %}
     </ul>
-  </body>
+
+    
+    </body>
 </html>
