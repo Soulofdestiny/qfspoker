@@ -1,7 +1,7 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 from sqlalchemy import create_engine, Column, Integer, Sequence, String
 from sqlalchemy.ext.declarative import declarative_base
-from bottle import route, run, template, jinja2_view, get, post, request, redirect, install
+from bottle import route, run, template, jinja2_view, get, post, request, redirect, install, response
 from bottle.ext import sqlalchemy
 import bottle_session
 import uuid
@@ -38,11 +38,20 @@ class DBSession(Base):
 @get('/')
 @jinja2_view("main.tpl", template_lookup=template_lookup)
 def index():
-    return {}
+    template_data = {}
+    username = request.get_cookie('username')
+    if username:
+        print("recover username from cookie: {}".format(username))
+        template_data.update({"username":username})
+    else:
+        template_data = {}
+
+    return template_data
 
 @post('/create_session')
 def create_session(db):
-    # TODO: give user a session cookie
+    username = request.forms.get('user_name')
+    response.set_cookie('username', str(username))
     session_name = request.forms.get('session_name')
     dbsession = DBSession(session_name)
     db.add(dbsession)
@@ -53,10 +62,11 @@ def create_session(db):
 @get('/sessions/<session_id>')
 @jinja2_view("session.tpl", template_lookup=template_lookup)
 def show_session(session_id, db):
+    username = request.get_cookie('username')
     session = db.query(DBSession).filter_by(id=session_id).first()
     data = {
-        'name' : session.name,
-        'session' : session.id,
+        'name' : username,
+        'session' : session.name,
         'user_story' : '',
         'users' : ['foo', 'bar'],
     }
