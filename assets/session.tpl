@@ -14,9 +14,15 @@
     <br>
     <input type="button" value="< previous story" class="switch_story" data="prev_story">
     <input type="button" value="next story >" class="switch_story" data="next_story">
+    <br>
+    <br>
+    <form action="import_story" method="post" id="import_story">
+      <input type="submit" name="action" value="import_story"/>
+      <input type"text" name="import_story"/>
+    </form>
 
     <br>
-    <h4>Currently there are {{ num_of_users }} users participating:</h4><br>
+    <h4>Currently there are {{ users|length }} users participating:</h4><br>
     <ul>
     {% for user in users %}
       <li> {{ user }} </li>
